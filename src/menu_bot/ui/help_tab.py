@@ -1,17 +1,16 @@
-"""도움말 탭: 사용법·데이터 형식·문의처."""
+"""도움말 — 단일 카드 Textbox (기획안 v2 5.5)."""
 from __future__ import annotations
 
-import tkinter as tk
-from tkinter import ttk
+import customtkinter as ctk
 
 from .. import __version__
-from . import theme
+from . import theme, widgets
 
 HELP_TEXT = f"""\
 🍙 밥봇 JB v{__version__} — 점심/저녁 메뉴 추천 알림봇
 
 ■ 기본 사용법
-  1. [추천] 탭에서 모드(점심/저녁/회식/메뉴)를 고르고 "룰렛 돌리기!"
+  1. [추천]에서 모드(점심/저녁/회식/메뉴)를 고르고 "룰렛 돌리기!"
   2. 마음에 들면 [이걸로 결정] — 선택이 기록되고 며칠간 중복 추천이 줄어요.
   3. [복사]로 결과를 메신저에 붙여넣을 수 있어요.
 
@@ -20,7 +19,7 @@ HELP_TEXT = f"""\
   데이터 폴더에 weather.txt(오늘날짜 | 비)가 있으면 자동 반영돼요.
 
 ■ 그룹 투표
-  [투표] 탭에서 후보를 뽑고 팀원들이 +1/거부권으로 결정하세요.
+  [투표]에서 후보를 뽑고 팀원들이 +1/거부권으로 결정하세요.
 
 ■ 데이터 직접 수정 (메모장 OK)
   data 폴더의 txt 파일을 열어 줄을 추가하면 끝!
@@ -40,11 +39,13 @@ HELP_TEXT = f"""\
 """
 
 
-class HelpTab(ttk.Frame):
+class HelpTab(ctk.CTkFrame):
     def __init__(self, master, app):
-        super().__init__(master)
-        text = tk.Text(self, font=theme.FONT, bg=theme.CREAM, fg=theme.NORI,
-                       relief="flat", wrap="word", padx=12, pady=10)
+        super().__init__(master, fg_color="transparent")
+        card = widgets.Card(self, title="도움말", hoverable=False)
+        card.pack(fill="both", expand=True)
+        text = ctk.CTkTextbox(card, font=theme.font(12), fg_color="transparent",
+                              text_color=theme.TEXT_MID, wrap="word")
         text.insert("1.0", HELP_TEXT)
         text.configure(state="disabled")
-        text.pack(fill="both", expand=True)
+        text.pack(fill="both", expand=True, padx=12, pady=(0, 12))

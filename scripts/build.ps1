@@ -10,6 +10,7 @@ $py = Join-Path $root ".venv\Scripts\python.exe"
     --add-data "$(Join-Path $root 'assets');assets" `
     --paths (Join-Path $root "src") `
     --hidden-import "pystray._win32" `
+    --collect-data "customtkinter" `
     --distpath (Join-Path $root "dist") `
     --workpath (Join-Path $root "build") `
     --specpath (Join-Path $root "build") `
