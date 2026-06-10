@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 import sys
+import threading
 
 from . import recommender as rec
 from .config import load_config
@@ -61,7 +62,10 @@ def main() -> int:
     finally:
         scheduler.stop()
         if tray_icon:
-            tray_icon.stop()
+            # pystray 스레드가 멈춰 있어도 종료가 막히지 않게 타임아웃
+            stopper = threading.Thread(target=tray_icon.stop, daemon=True)
+            stopper.start()
+            stopper.join(timeout=2.0)
     return 0
 
 

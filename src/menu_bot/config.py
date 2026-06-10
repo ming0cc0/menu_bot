@@ -23,7 +23,6 @@ class Config:
     notify_catchup_min: int = 60     # 알림 시각을 놓쳤을 때 N분 이내면 늦게라도 발송
     cooldown_days: int = 3
     default_walk_limit: int = 10
-    sound: str = "off"
 
     def _resolve(self, value: str) -> Path:
         p = Path(value)

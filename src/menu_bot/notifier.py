@@ -25,11 +25,12 @@ MESSAGES = {
 }
 
 
-def send_toast(title: str, message: str) -> None:
+def send_toast(title: str, message: str,
+               icon_name: str = "jb_app_icon_256.png") -> None:
     try:
         from winotify import Notification
 
-        icon = resource_path("assets/jb_app_icon_256.png")
+        icon = resource_path(f"assets/{icon_name}")
         toast = Notification(
             app_id=APP_ID, title=title, msg=message,
             icon=str(icon) if icon.exists() else "")
@@ -73,6 +74,8 @@ class NotifyScheduler:
             if late_min > max(self.cfg.notify_catchup_min, 0):
                 self._sent[mode] = today  # 너무 늦음 — 오늘은 건너뜀
                 continue
-            send_toast("오늘 뭐 먹지?", MESSAGES[mode])
+            # 기획안 7-A: 알림 토스트 = '배고픔' 표정
+            send_toast("오늘 뭐 먹지?", MESSAGES[mode],
+                       icon_name="jb_mascot_hungry.png")
             self._sent[mode] = today
             log.info("%s 알림 발송 (%s)", mode, hhmm)

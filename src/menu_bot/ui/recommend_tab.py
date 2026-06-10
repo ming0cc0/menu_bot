@@ -176,22 +176,27 @@ class RecommendTab(ttk.Frame):
             self.app.store, self.build_query())
         self.result_card.pack_forget()
         if not self.candidates:
-            self._set_mascot("jb_mascot.png")
+            # 빈 상태(기획안 7-A): 배고픈 마스코트가 데이터 추가를 안내
+            self._set_mascot("jb_mascot_hungry.png")
             self.status.configure(text="조건에 맞는 후보가 없어요.\n"
-                                       "필터를 풀거나 데이터를 추가해 주세요!")
+                                       "필터를 풀거나 메뉴를 추가해 주세요!")
             self.wheel.set_candidates([])
             return
         self.winner = rec.weighted_pick(self.candidates)
         self.slots = rec.pick_slots(self.candidates, MAX_SLOTS)
-        if self.winner.name not in {s.name for s in self.slots}:
-            self.slots[random.randrange(len(self.slots))] = self.winner
+        if self.winner.name in {s.name for s in self.slots}:
+            idx = next(i for i, s in enumerate(self.slots)
+                       if s.name == self.winner.name)
+        else:
+            # 동명 후보가 있어도 안전하도록 교체한 칸 인덱스를 그대로 사용
+            idx = random.randrange(len(self.slots))
+            self.slots[idx] = self.winner
         info = f"후보 {len(self.candidates)}개"
         if len(self.candidates) > len(self.slots):
             info += f" 중 {len(self.slots)}개 표시"
         self.status.configure(text=f"고민중… ({info})")
         self._set_mascot("jb_mascot_dizzy.png")
         self.wheel.set_candidates([s.name for s in self.slots])
-        idx = next(i for i, s in enumerate(self.slots) if s.name == self.winner.name)
         self.wheel.spin_to(idx, self._on_spin_done)
 
     def _on_spin_done(self) -> None:

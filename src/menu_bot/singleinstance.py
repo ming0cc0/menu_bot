@@ -56,7 +56,10 @@ def listen(on_show: Callable[[], None]) -> None:
                 conn, _ = srv.accept()
                 with conn:
                     if conn.recv(16).startswith(b"SHOW"):
-                        on_show()
+                        try:
+                            on_show()
+                        except Exception as e:  # noqa: BLE001 — 수신 루프는 죽으면 안 됨
+                            log.warning("창 표시 콜백 실패: %s", e)
             except OSError:
                 continue
 
