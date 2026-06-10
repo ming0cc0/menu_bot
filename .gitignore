@@ -6,4 +6,5 @@ dist/
 *.spec
 wheels/
 error.log
+/config.txt
 .pytest_cache/
